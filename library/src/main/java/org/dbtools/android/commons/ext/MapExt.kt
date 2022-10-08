@@ -47,7 +47,6 @@ fun Map<*, *>.getFloat(key: String): Float? {
 }
 
 fun Map<*, *>.requireTimestamp(key: String): Timestamp = getTimestamp(key) ?: error("Value for key [$key] cannot be null/missing")
-
 fun Map<*, *>.getTimestamp(key: String): Timestamp? {
     val data = this[key] ?: return null
     return when (data) {
@@ -57,11 +56,9 @@ fun Map<*, *>.getTimestamp(key: String): Timestamp? {
 }
 
 fun Map<*, *>.requireDate(key: String): Date = getDate(key) ?: error("Value for key [$key] cannot be null/missing")
-
 fun Map<*, *>.getDate(key: String): Date? = getTimestamp(key)?.toDate()
 
 fun Map<*, *>.requireOffsetDateTime(key: String): OffsetDateTime = getOffsetDateTime(key) ?: error("Value for key [$key] cannot be null/missing")
-
 fun Map<*, *>.getOffsetDateTime(key: String): OffsetDateTime? = getTimestamp(key)?.toDate()?.toOffsetDateTime()
 
 fun <T> Map<*, *>.getType(key: String, map: (Any) -> T): T? {

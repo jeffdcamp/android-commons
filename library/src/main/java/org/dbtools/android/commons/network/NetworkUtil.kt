@@ -137,10 +137,9 @@ object NetworkUtil {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             connectivityManager.registerDefaultNetworkCallback(networkCallback)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        } else
             connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), networkCallback)
         }
-    }
 
     /**
      * Unregisters [ConnectivityManager.NetworkCallback] registered in [registerNetworkCallback]
