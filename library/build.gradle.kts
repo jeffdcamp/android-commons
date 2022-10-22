@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
     signing
     kotlin("android")
-    id("de.undercouch.download") version "5.2.1"
+    id("de.undercouch.download") version "5.3.0"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
 }
@@ -63,7 +63,7 @@ dependencies {
     compileOnly(libs.androidx.datastorePrefs)
 
     // Firebase
-    compileOnly(libs.google.firebase.core)
+    compileOnly(libs.google.firebase.analytics)
     compileOnly(libs.google.firebase.config)
     compileOnly(libs.google.firebase.crashlytics)
     compileOnly(libs.google.firebase.firestore)
