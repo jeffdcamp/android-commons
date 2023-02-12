@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
     signing
     kotlin("android")
-    id("de.undercouch.download") version "5.3.0"
+    id("de.undercouch.download") version "5.3.1"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
 }
@@ -57,13 +57,14 @@ dependencies {
     // Android
     coreLibraryDesugaring(libs.android.desugar)
     implementation(libs.androidx.activity)
-    implementation(libs.androidx.lifecycle.runtime)
+//    implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.process)
     compileOnly(libs.androidx.datastorePrefs)
 
     // Firebase
     compileOnly(libs.google.firebase.analytics)
+    compileOnly(libs.google.firebase.auth)
     compileOnly(libs.google.firebase.config)
     compileOnly(libs.google.firebase.crashlytics)
     compileOnly(libs.google.firebase.firestore)
@@ -81,7 +82,7 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.engine)
     testImplementation(libs.mockK)
-    testImplementation(libs.truth)
+//    testImplementation(libs.truth)
 }
 
 // ===== TEST TASKS =====

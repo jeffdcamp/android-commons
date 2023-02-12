@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.2.0 *(2023-02)*
+-------------------------
+* Updated versions: Kotlin 1.8.10
+* Removed SavedStateHandleDelegates
+
 Version 1.1.0 *(2022-10)*
 -------------------------
 * Updated versions: Firebase dependencies (removed core/added analytics)

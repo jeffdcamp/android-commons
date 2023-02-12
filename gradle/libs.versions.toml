@@ -1,29 +1,30 @@
 [versions]
-agp = "7.3.1"
-kotlin = "1.7.20"
+agp = "7.4.1"
+kotlin = "1.8.10"
 kotlinxCoroutines = "1.6.4"
 kotlinxSerializationJson = "1.4.1"
 
-androidxActivity = "1.6.0"
+androidxActivity = "1.7.0-beta01"
 androidxDataStore = "1.0.0"
-androidxLifecycle = "2.5.1"
+androidxLifecycle = "2.6.0-beta01"
 
-desugarJdkLibs = "1.2.2"
-detekt = "1.22.0-RC1"
+desugarJdkLibs = "2.0.2"
+detekt = "1.22.0"
 
 firebaseAnalytics = "21.2.0"
-firebaseConfig = "21.2.0"
-firebaseCrashlytics = "18.3.1"
-firebaseFirestore = "24.4.0"
+firebaseAuth = "21.1.0"
+firebaseConfig = "21.2.1"
+firebaseCrashlytics = "18.3.4"
+firebaseFirestore = "24.4.3"
 
-junit = "5.9.1"
-ksp = "1.7.20-1.0.7"
-mockK = "1.13.2"
+junit = "5.9.2"
+ksp = "1.8.10-1.0.8"
+mockK = "1.13.4"
 okhttp = "4.10.0"
 retrofit = "2.9.0"
 timber = "5.0.1"
 truth = "1.1.3"
-versionsGradlePlugin = "0.43.0"
+versionsGradlePlugin = "0.45.0"
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -42,6 +43,7 @@ androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecyc
 
 # Firebase - https://firebase.google.com/support/release-notes/android
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
+google-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuth" }
 google-firebase-config = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebaseConfig" }
 google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebaseCrashlytics" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestore"  }
