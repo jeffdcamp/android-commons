@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package org.dbtools.android.commons.firebase.firestore
 
 import com.google.firebase.firestore.DocumentChange
@@ -36,7 +38,7 @@ fun <T> queriesCollectionFlow(queries: Iterable<Query>, convert: suspend (Docume
     return queryCollectionFlow(flow, convert)
 }
 
-/**
+/*
  * Create a [Flow] of [Collection] from a [Flow] of [DocumentSnapshot]
  */
 private fun <T> documentCollectionFlow(documents: Flow<DocumentSnapshot>, convert: suspend (DocumentSnapshot) -> T?): Flow<List<T>> = flow {
@@ -57,7 +59,7 @@ private fun <T> documentCollectionFlow(documents: Flow<DocumentSnapshot>, conver
     }
 }.flowOn(Dispatchers.IO)
 
-/**
+/*
  * Create a [Flow] of [Collection] from a [Flow] of [DocumentChange]
  */
 private fun <T> queryCollectionFlow(changes: Flow<List<DocumentChange>>, convert: suspend (DocumentSnapshot) -> T?): Flow<List<T>> = flow {

@@ -6,12 +6,14 @@ plugins {
     `maven-publish`
     signing
     kotlin("android")
-    id("de.undercouch.download") version "5.3.1"
+    id("de.undercouch.download") version "5.4.0"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
 }
 
 android {
+    namespace = "org.dbtools.android.commons"
+
     compileSdk = AndroidSdk.COMPILE
 
     defaultConfig {
@@ -20,12 +22,14 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         // Flag to enable support for the new language APIs
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
         freeCompilerArgs = listOf("-module-name", Pom.LIBRARY_ARTIFACT_ID)
         freeCompilerArgs += listOf(
                 "-Xopt-in=kotlin.RequiresOptIn",
@@ -98,7 +102,7 @@ tasks.withType<Test> {
 tasks.register<de.undercouch.gradle.tasks.download.Download>("downloadDetektConfig") {
     download {
         onlyIf { !file("build/config/detektConfig.yml").exists() }
-        src("https://raw.githubusercontent.com/ICSEng/AndroidPublic/main/detekt/detektConfig-20221001.yml")
+        src("https://raw.githubusercontent.com/ICSEng/AndroidPublic/main/detekt/detektConfig-20230420.yml")
         dest("build/config/detektConfig.yml")
     }
 }
@@ -106,7 +110,7 @@ tasks.register<de.undercouch.gradle.tasks.download.Download>("downloadDetektConf
 // make sure when running detekt, the config file is downloaded
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     // Target version of the generated JVM bytecode. It is used for type resolution.
-    this.jvmTarget = "1.8"
+    this.jvmTarget = "17"
     dependsOn("downloadDetektConfig")
 }
 
@@ -114,7 +118,7 @@ tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
 detekt {
     allRules = true // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
-    config = files("$projectDir/build/config/detektConfig.yml") // point to your custom config defining rules to run, overwriting default behavior
+    config.setFrom(files("$projectDir/build/config/detektConfig.yml")) // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 }
 
