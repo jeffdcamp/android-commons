@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.3.0 *(2023-05)*
+-------------------------
+* Updated versions: Kotlin 1.8.21 / AGP 8.0.1 / Gradle 8.1.1 / Java 17
+* Added Firestore Extension functions for documentFlow(), collectionFlow(), queryFlow() 
+* Removed ProcessScope (Use CoroutinesModule to provide ioDispatcher, defaultDispatcher, appScope)
+
 Version 1.2.0 *(2023-02)*
 -------------------------
 * Updated versions: Kotlin 1.8.10

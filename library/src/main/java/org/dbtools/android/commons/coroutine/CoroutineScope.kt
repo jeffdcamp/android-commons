@@ -9,4 +9,5 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * Replaces GlobalScope
  */
+@Deprecated("Use CoroutinesModule to provide ioDispatcher, defaultDispatcher, appScope", ReplaceWith(""))
 val ProcessScope: CoroutineScope get() = ProcessLifecycleOwner.get().lifecycleScope
