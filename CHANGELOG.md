@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.3.1 *(2023-06)*
+-------------------------
+* Added Okio Filesystem extension functions: isDirectory, readText, writeText, unzip, unzipFile, copyFileToFileSystem
+* Updated versions
+
 Version 1.3.0 *(2023-05)*
 -------------------------
 * Updated versions: Kotlin 1.8.21 / AGP 8.0.1 / Gradle 8.1.1 / Java 17
