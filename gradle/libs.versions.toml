@@ -1,7 +1,7 @@
 [versions]
-agp = "8.0.2"
-kotlin = "1.8.21"
-kotlinxCoroutines = "1.7.2"
+agp = "8.1.0"
+kotlin = "1.9.0"
+kotlinxCoroutines = "1.7.3"
 kotlinxSerializationJson = "1.5.1"
 
 androidxActivity = "1.7.2"
@@ -9,18 +9,19 @@ androidxDataStore = "1.0.0"
 androidxLifecycle = "2.6.1"
 
 desugarJdkLibs = "2.0.3"
-detekt = "1.23.0"
+detekt = "1.23.1"
 
 firebaseAnalytics = "21.3.0"
-firebaseAuth = "22.0.0"
-firebaseConfig = "21.4.0"
-firebaseCrashlytics = "18.3.7"
-firebaseFirestore = "24.6.1"
+firebaseAuth = "22.1.1"
+firebaseConfig = "21.4.1"
+firebaseCrashlytics = "18.4.0"
+firebaseFirestore = "24.7.0"
 
-junit = "5.9.3"
-mockK = "1.13.5"
+junit = "5.10.0"
+kermit = "2.0.0-RC5"
+mockK = "1.13.7"
 okhttp = "4.11.0"
-okio = "3.4.0"
+okio = "3.5.0"
 retrofit = "2.9.0"
 timber = "5.0.1"
 truth = "1.1.5"
@@ -49,6 +50,9 @@ google-firebase-firestore = { module = "com.google.firebase:firebase-firestore-k
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "kermit" }
+
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlin-gradlePluginClasspath = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -59,8 +63,6 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 mockK = { module = "io.mockk:mockk", version.ref = "mockK" }
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-
-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 

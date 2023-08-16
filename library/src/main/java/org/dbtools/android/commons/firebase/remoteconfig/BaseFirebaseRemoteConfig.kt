@@ -3,6 +3,7 @@
 package org.dbtools.android.commons.firebase.remoteconfig
 
 import androidx.annotation.XmlRes
+import co.touchlab.kermit.Logger
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.ktx.Firebase
@@ -10,7 +11,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import timber.log.Timber
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -42,7 +42,7 @@ abstract class BaseFirebaseRemoteConfig {
 
     @Suppress("ForbiddenVoid") // calling Java
     fun fetch(now: Boolean = false): Task<Void> {
-        Timber.d("RemoteConfig: fetch  now=$now")
+        Logger.d { "RemoteConfig: fetch  now=$now" }
 
         return if (now) {
             // Starts fetching configs, adhering to the specified (0L) minimum fetch interval (fetch NOW)
@@ -55,13 +55,13 @@ abstract class BaseFirebaseRemoteConfig {
     }
 
     fun activate(): Task<Boolean> {
-        Timber.d("RemoteConfig: activate")
+        Logger.d { "RemoteConfig: activate" }
         return firebaseRemoteConfig.activate()
     }
 
     @Suppress("unused")
     fun fetchAndActivateAsync(now: Boolean = false, onFailureBlock: () -> Unit = {}, onSuccessBlock: () -> Unit = {}) {
-        Timber.d("RemoteConfig: fetchAndActivateAsync")
+        Logger.d { "RemoteConfig: fetchAndActivateAsync" }
 
         val fetchTask = if (now) {
             // Starts fetching configs, adhering to the specified (0L) minimum fetch interval (fetch NOW)
@@ -78,7 +78,7 @@ abstract class BaseFirebaseRemoteConfig {
                     onSuccessBlock()
                 }
                 else -> {
-                    Timber.w("Failed to sync/fetch RemoteConfig")
+                    Logger.w { "Failed to sync/fetch RemoteConfig" }
                     onFailureBlock()
                 }
             }
@@ -91,7 +91,7 @@ abstract class BaseFirebaseRemoteConfig {
      * @return true if the fetch was successful and we could apply the changes; false if there was an error fetching and activating
      */
     fun fetchAndActivateNow(timeoutSeconds: Long = DEFAULT_TIMEOUT_FETCH_SECONDS_SHORT): Boolean {
-        Timber.d("RemoteConfig: fetchAndActivateNow")
+        Logger.d { "RemoteConfig: fetchAndActivateNow" }
 
         // Starts fetching configs, adhering to the specified (0L) minimum fetch interval (fetch NOW)
         val fetchTask = firebaseRemoteConfig.fetch(0L)
@@ -104,9 +104,9 @@ abstract class BaseFirebaseRemoteConfig {
                 return true
             }
         } catch (_: TimeoutException) {
-            Timber.w("fetchAndActivateNow timeout occurred")
+            Logger.w { "fetchAndActivateNow timeout occurred" }
         } catch (expected: Exception) {
-            Timber.e(expected,"Failed to FetchAndActivate")
+            Logger.e(expected) { "Failed to FetchAndActivate" }
         }
 
         return false

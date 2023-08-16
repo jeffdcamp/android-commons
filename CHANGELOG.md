@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.4.0 *(2023-08)*
+-------------------------
+* Changed Timber to Kermit Logger / added SimpleCrashlyticsLogWriter, LoggerNonFatalCrashLogException
+* Updated versions
+
 Version 1.3.1 *(2023-06)*
 -------------------------
 * Added Okio Filesystem extension functions: isDirectory, readText, writeText, unzip, unzipFile, copyFileToFileSystem

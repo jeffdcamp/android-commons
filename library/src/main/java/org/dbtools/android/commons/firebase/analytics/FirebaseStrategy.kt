@@ -4,9 +4,9 @@ package org.dbtools.android.commons.firebase.analytics
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import co.touchlab.kermit.Logger
 import com.google.firebase.analytics.FirebaseAnalytics
 import org.dbtools.android.commons.analytics.AppAnalytics
-import timber.log.Timber
 import java.util.Locale
 
 class FirebaseStrategy(
@@ -73,7 +73,7 @@ class FirebaseStrategy(
 
     private fun consoleLogMessage(level: AppAnalytics.LogLevel, message: String) {
         if (level.ordinal <= logLevel.ordinal) {
-            Timber.d(message)
+            Logger.d { message }
         }
     }
 

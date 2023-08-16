@@ -1,5 +1,6 @@
 package org.dbtools.android.commons.firebase.firestore
 
+import co.touchlab.kermit.Logger
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -10,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class QueryListener(
     private val query: Query,
@@ -43,7 +43,7 @@ class QueryListener(
     override fun onEvent(querySnapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
         when {
             e != null -> {
-                Timber.e(e, name)
+                Logger.e(e) { name }
                 // when an error occurs the listener is already dead, so we must restart it
                 if (listener != null) {
                     listenerUtil.restartAfterError {

@@ -1,17 +1,13 @@
 package org.dbtools.android.commons.analytics
 
-import android.util.Log
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import okio.Path
-import org.dbtools.android.commons.ext.writeText
-import timber.log.Timber
 
 class TestStrategy(
-    private val tag: String = "Test",
-    private val logPriority: Int = Log.DEBUG
+    private val logBlock: (message: String) -> Unit
 ) : AppAnalytics.Strategy {
     private var logLevel = AppAnalytics.LogLevel.NONE
     private var providerLoggingEnabled = false
@@ -79,7 +75,7 @@ class TestStrategy(
 
     private fun consoleLogMessage(level: AppAnalytics.LogLevel, message: String) {
         if (level.ordinal <= logLevel.ordinal) {
-            Timber.log(logPriority, "$tag: DEBUG: $message")
+            logBlock(message)
         }
     }
 
@@ -95,7 +91,7 @@ class TestStrategy(
         val logFile = logToJsonFile ?: return
 
         val fileSystem = FileSystem.SYSTEM
-        fileSystem.writeText(logFile, json.encodeToString(ListSerializer(Analytic.serializer()), analyticsList))
+        fileSystem.write(logFile) { writeUtf8(json.encodeToString(ListSerializer(Analytic.serializer()), analyticsList)) }
     }
 
     @Serializable
