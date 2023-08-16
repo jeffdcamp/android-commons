@@ -84,7 +84,6 @@ dependencies {
 
     // Logging
     implementation(libs.kermit)
-    implementation(libs.kermit.crashlytics)
 
     // Test (Unit)
     testImplementation(libs.junit.jupiter)

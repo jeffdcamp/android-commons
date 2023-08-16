@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-Version 1.4.0 *(2023-08)*
+Version 1.4.1 *(2023-08)*
 -------------------------
-* Changed Timber to Kermit Logger / added SimpleCrashlyticsLogWriter, LoggerNonFatalCrashLogException
+* Changed Timber to Kermit Logger / added CrashLogException to provide common exception for Logger.e without a provided exception (Ex: Logger.e(CrashLogException()) { })
 * Updated versions
 
 Version 1.3.1 *(2023-06)*
