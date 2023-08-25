@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.4.2 *(2023-08)*
+-------------------------
+* Improved SavedStateHandleExt.kt: Removed generic get() to prevent runtime issues / created SavedStateHandle extensions that are type safe (return a value that is expected)
+* Updated versions
+
 Version 1.4.1 *(2023-08)*
 -------------------------
 * Changed Timber to Kermit Logger / added CrashLogException to provide common exception for Logger.e without a provided exception (Ex: Logger.e(CrashLogException()) { })
