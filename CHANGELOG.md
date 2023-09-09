@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.4.3 *(2023-09)*
+-------------------------
+* Added DirectDownloader and DirectUploader
+* Updated versions
+
 Version 1.4.2 *(2023-08)*
 -------------------------
 * Improved SavedStateHandleExt.kt: Removed generic get() to prevent runtime issues / created SavedStateHandle extensions that are type safe (return a value that is expected)
