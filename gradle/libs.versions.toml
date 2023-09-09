@@ -1,13 +1,14 @@
 [versions]
 agp = "8.1.1"
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
 kotlinxSerializationJson = "1.6.0"
 
 androidxActivity = "1.7.2"
 androidxDataStore = "1.0.0"
-androidxLifecycle = "2.6.1"
+androidxLifecycle = "2.6.2"
 
+assertk = "0.26.1"
 desugarJdkLibs = "2.0.3"
 detekt = "1.23.1"
 
@@ -23,8 +24,7 @@ mockK = "1.13.7"
 okhttp = "4.11.0"
 okio = "3.5.0"
 retrofit = "2.9.0"
-truth = "1.1.5"
-versionsGradlePlugin = "0.47.0"
+versionsGradlePlugin = "0.48.0"
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -39,6 +39,8 @@ androidx-datastorePrefs = { module = "androidx.datastore:datastore-preferences",
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycle" }
 
+assertk = { module = "com.willowtreeapps.assertk:assertk", version.ref = "assertk" }
+
 # Firebase - https://firebase.google.com/support/release-notes/android
 google-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuth" }
@@ -52,6 +54,7 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlin-gradlePluginClasspath = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
@@ -61,7 +64,5 @@ okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 mockK = { module = "io.mockk:mockk", version.ref = "mockK" }
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-
-truth = { module = "com.google.truth:truth", version.ref = "truth" }
 
 gradleVersions-gradlePluginClasspath = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "versionsGradlePlugin" }

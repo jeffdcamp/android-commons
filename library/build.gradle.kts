@@ -89,7 +89,8 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.engine)
     testImplementation(libs.mockK)
-//    testImplementation(libs.truth)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.assertk)
 }
 
 // ===== TEST TASKS =====
