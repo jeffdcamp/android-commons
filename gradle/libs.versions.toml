@@ -3,24 +3,25 @@ agp = "8.1.1"
 kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
 kotlinxSerializationJson = "1.6.0"
+kotlinxDateTime = "0.4.1"
 
 androidxActivity = "1.7.2"
 androidxDataStore = "1.0.0"
 androidxLifecycle = "2.6.2"
 
-assertk = "0.26.1"
+assertk = "0.27.0"
 desugarJdkLibs = "2.0.3"
 detekt = "1.23.1"
 
 firebaseAnalytics = "21.3.0"
-firebaseAuth = "22.1.1"
+firebaseAuth = "22.1.2"
 firebaseConfig = "21.4.1"
-firebaseCrashlytics = "18.4.1"
-firebaseFirestore = "24.7.1"
+firebaseCrashlytics = "18.4.3"
+firebaseFirestore = "24.8.1"
 
 junit = "5.10.0"
-kermit = "2.0.0-RC5"
-mockK = "1.13.7"
+kermit = "2.0.1"
+mockK = "1.13.8"
 okhttp = "4.11.0"
 okio = "3.5.0"
 retrofit = "2.9.0"
@@ -55,6 +56,7 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDateTime" }
 kotlin-gradlePluginClasspath = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
