@@ -1,19 +1,18 @@
-@file:Suppress("MemberVisibilityCanBePrivate")
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
 package org.dbtools.android.commons.firebase.remoteconfig
 
 import androidx.annotation.XmlRes
 import co.touchlab.kermit.Logger
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import java.time.Instant
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
+import kotlinx.coroutines.tasks.await
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.hours
 
 abstract class BaseFirebaseRemoteConfig {
     private val firebaseRemoteConfig: FirebaseRemoteConfig by lazy {
@@ -36,11 +35,11 @@ abstract class BaseFirebaseRemoteConfig {
     @XmlRes
     abstract fun getDefaults(): Int
 
-    fun getMinimumFetchIntervalInSeconds(): Long = TimeUnit.HOURS.toSeconds(12)
+    fun getMinimumFetchIntervalInSeconds(): Long = 12.hours.inWholeSeconds
 
     fun getFetchTimeoutInSeconds(): Long = DEFAULT_TIMEOUT_FETCH_SECONDS_LONG
 
-    @Suppress("ForbiddenVoid") // calling Java
+    @Suppress("ForbiddenVoid") // Coming from SDK
     fun fetch(now: Boolean = false): Task<Void> {
         Logger.d { "RemoteConfig: fetch  now=$now" }
 
@@ -59,7 +58,6 @@ abstract class BaseFirebaseRemoteConfig {
         return firebaseRemoteConfig.activate()
     }
 
-    @Suppress("unused")
     fun fetchAndActivateAsync(now: Boolean = false, onFailureBlock: () -> Unit = {}, onSuccessBlock: () -> Unit = {}) {
         Logger.d { "RemoteConfig: fetchAndActivateAsync" }
 
@@ -87,10 +85,9 @@ abstract class BaseFirebaseRemoteConfig {
 
     /**
      * Fetch and Activate synchronously.... if there is a timeout issue, then don't error
-     * @param timeoutSeconds How long the fetch should be allowed to take before timeout will occur
      * @return true if the fetch was successful and we could apply the changes; false if there was an error fetching and activating
      */
-    fun fetchAndActivateNow(timeoutSeconds: Long = DEFAULT_TIMEOUT_FETCH_SECONDS_SHORT): Boolean {
+    suspend fun fetchAndActivateNow(): Boolean {
         Logger.d { "RemoteConfig: fetchAndActivateNow" }
 
         // Starts fetching configs, adhering to the specified (0L) minimum fetch interval (fetch NOW)
@@ -98,13 +95,11 @@ abstract class BaseFirebaseRemoteConfig {
 
         // Await fetch, then activate right away if fetch was successful
         try {
-            Tasks.await(fetchTask, timeoutSeconds, TimeUnit.SECONDS)
+            fetchTask.await()
             if (fetchTask.isSuccessful) {
                 firebaseRemoteConfig.activate()
                 return true
             }
-        } catch (_: TimeoutException) {
-            Logger.w { "fetchAndActivateNow timeout occurred" }
         } catch (expected: Exception) {
             Logger.e(expected) { "Failed to FetchAndActivate" }
         }
@@ -112,11 +107,10 @@ abstract class BaseFirebaseRemoteConfig {
         return false
     }
 
-    @Suppress("unused")
     fun getStatusDetails(): String {
         val info = firebaseRemoteConfig.info
         return "Last Fetch Status: [${getLastFetchStatus()}]  " +
-                "Fetch: [${Instant.ofEpochMilli(info.fetchTimeMillis)}]  Min Fetch Interval: [${info.configSettings.minimumFetchIntervalInSeconds}s] " +
+                "Fetch: [${Instant.fromEpochMilliseconds(info.fetchTimeMillis)}]  " +
                 "Fetch Timeout: [${info.configSettings.fetchTimeoutInSeconds}s]"
     }
 
