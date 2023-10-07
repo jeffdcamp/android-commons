@@ -1,11 +1,11 @@
 [versions]
-agp = "8.1.1"
+agp = "8.1.2"
 kotlin = "1.9.10"
 kotlinxCoroutines = "1.7.3"
 kotlinxSerializationJson = "1.6.0"
 kotlinxDateTime = "0.4.1"
 
-androidxActivity = "1.7.2"
+androidxActivity = "1.8.0"
 androidxDataStore = "1.0.0"
 androidxLifecycle = "2.6.2"
 
@@ -23,7 +23,7 @@ junit = "5.10.0"
 kermit = "2.0.1"
 mockK = "1.13.8"
 okhttp = "4.11.0"
-okio = "3.5.0"
+okio = "3.6.0"
 retrofit = "2.9.0"
 versionsGradlePlugin = "0.48.0"
 

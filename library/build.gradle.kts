@@ -76,6 +76,7 @@ dependencies {
     // Code
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.kotlin.serialization.json)
+    implementation(libs.kotlin.datetime)
     implementation(libs.okio)
 
     // Network
