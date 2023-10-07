@@ -2,6 +2,7 @@ package org.dbtools.android.commons.ext
 
 import com.google.firebase.Timestamp
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.Date
 
 fun Map<*, *>.requireString(key: String): String = getString(key) ?: error("Value for key [$key] cannot be null/missing")
@@ -59,7 +60,7 @@ fun Map<*, *>.requireDate(key: String): Date = getDate(key) ?: error("Value for 
 fun Map<*, *>.getDate(key: String): Date? = getTimestamp(key)?.toDate()
 
 fun Map<*, *>.requireOffsetDateTime(key: String): OffsetDateTime = getOffsetDateTime(key) ?: error("Value for key [$key] cannot be null/missing")
-fun Map<*, *>.getOffsetDateTime(key: String): OffsetDateTime? = getTimestamp(key)?.toDate()?.toOffsetDateTime()
+fun Map<*, *>.getOffsetDateTime(key: String): OffsetDateTime? = getTimestamp(key)?.toDate()?.toInstant()?.atOffset(ZoneOffset.UTC)
 
 fun <T> Map<*, *>.getType(key: String, map: (Any) -> T): T? {
     val data = this[key] ?: return null
