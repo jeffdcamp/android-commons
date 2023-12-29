@@ -27,7 +27,8 @@ abstract class BaseFirebaseRemoteConfig {
         instance.setConfigSettingsAsync(firebaseSettings)
 
         // set defaults
-        instance.setDefaultsAsync(getDefaults())
+        // block while loading default values (prevent empty values on first launch)
+        runBlocking { instance.setDefaultsAsync(getDefaults()).await() }
 
         return@lazy instance
     }
