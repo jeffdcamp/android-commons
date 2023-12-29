@@ -5,11 +5,12 @@ package org.dbtools.android.commons.firebase.remoteconfig
 import androidx.annotation.XmlRes
 import co.touchlab.kermit.Logger
 import com.google.android.gms.tasks.Task
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.hours
