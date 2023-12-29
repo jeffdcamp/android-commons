@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.okio)
 
     // Network
+    implementation(libs.ktor.client.core)
+
     implementation(libs.okhttp)
     compileOnly(libs.retrofit)
 

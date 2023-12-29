@@ -7,13 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.4.5] - 2022-11-18
+### Changed
+
+- 
+
+## [1.4.6] - 2023-12-28
+
+### Added
+
+- ApiResponse for handling network responses
+- KtorExt HttpClient.executeSafely(), HttpResponse.saveBodyToFile()
+- Support for Ktor and ApiResponse via executeSafely()
+
+
+### Changed
+
+- Updated versions including: Kotlin 1.9.21, Firebase, Okio 3.7.0, etc
+- Changed BaseFirebaseRemoteConfig to block while loading default values (prevent empty values on first launch)
+- Migrated off of Firebase KTX (https://firebase.google.com/docs/android/kotlin-migration)
+
+
+## [1.4.5] - 2023-11-18
 
 ### Changed
 
 - Updated versions including: Kotlin 1.9.20, Okhttp 4.12.0, Firebase, etc
 
-## [1.4.4] - 2022-10-07
+## [1.4.4] - 2023-10-07
 
 ### Added
 

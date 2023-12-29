@@ -6,7 +6,7 @@ object AndroidSdk {
 
 object Pom {
     const val GROUP_ID = "org.dbtools"
-    const val VERSION_NAME = "1.4.5"
+    const val VERSION_NAME = "1.4.6"
     const val POM_DESCRIPTION = "Android Commons"
 
     const val URL = "https://github.com/jeffdcamp/android-commons/"
