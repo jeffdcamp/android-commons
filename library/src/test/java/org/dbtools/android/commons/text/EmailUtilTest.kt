@@ -1,7 +1,9 @@
 package org.dbtools.android.commons.text
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import org.junit.jupiter.api.Test
 
@@ -22,5 +24,20 @@ class EmailUtilTest {
         assertThat(EmailUtil.isValidEmailAddress("joe")).isFalse()
         assertThat(EmailUtil.isValidEmailAddress("joe@somedomain")).isFalse()
         assertThat(EmailUtil.isValidEmailAddress("joe@.org")).isFalse()
+    }
+
+    @Test
+    fun testUsernames() {
+        assertThat(EmailUtil.getUsername("joe@somedomain.org")).isEqualTo("joe")
+        assertThat(EmailUtil.getUsername("joe@somedomain")).isEqualTo("joe")
+        assertThat(EmailUtil.getUsername("@somedomain.org")).isEqualTo("")
+    }
+
+    @Test
+    fun testDomains() {
+        assertThat(EmailUtil.getDomain("joe@somedomain.org")).isEqualTo("somedomain.org")
+        assertThat(EmailUtil.getDomain("joe@somedomain")).isEqualTo("somedomain")
+        assertThat(EmailUtil.getDomain("@somedomain.org")).isEqualTo("somedomain.org")
+        assertThat(EmailUtil.getDomain("somedomain.org")).isNull()
     }
 }
