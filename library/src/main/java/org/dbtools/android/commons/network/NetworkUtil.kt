@@ -13,24 +13,19 @@ object NetworkUtil {
     fun isConnected(context: Context, allowMobileNetwork: Boolean = true): Boolean {
         val connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        return if (Build.VERSION.SDK_INT < 23) {
-            isConnectedLegacy(connectivityManager, allowMobileNetwork)
-        } else {
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
-            val hasInternet = hasInternetCapabilityInAnyNetwork(context)
+        val hasInternet = hasInternetCapabilityInAnyNetwork(context)
 
-            // check to see if we even have Internet (no need to check mobile network capabilities if we don't even have Internet)
-            if (!hasInternet) {
-                return false
-            }
-
-            // check to see if mobile network is usable
-            if (allowMobileNetwork) {
+        // check to see if mobile network is usable
+        return when {
+            !hasInternet -> false
+            allowMobileNetwork -> {
                 // mobile network is allowed... so just check if we have Internet
-                return hasInternet
-            } else {
+                true
+            }
+            else -> {
                 // mobile network is NOT allowed...
 
                 // check the default network for cellular connection
@@ -44,20 +39,9 @@ object NetworkUtil {
                     return false
                 }
 
-                // cellular network is NOT being used... so just check if we have Internet
-                return hasInternet
+                // cellular network is NOT being used... at this point we MUST have a good connection
+                true
             }
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun isConnectedLegacy(connectivityManager: ConnectivityManager, allowMeteredNetwork: Boolean = true): Boolean {
-        val info = connectivityManager.activeNetworkInfo ?: return false
-
-        val type = info.type
-        return when {
-            type == ConnectivityManager.TYPE_WIFI || type > ConnectivityManager.TYPE_WIMAX || allowMeteredNetwork -> info.isConnected || type == TYPE_WIFI_DIRECT
-            else -> false
         }
     }
 
@@ -86,46 +70,34 @@ object NetworkUtil {
     fun getAllNetworkInfo(context: Context, allowMobileNetwork: Boolean = true): String {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (Build.VERSION.SDK_INT < 23) {
-            return "Legacy Network Checks (Android 5.1 or less)\n" +
-                    "App can use Internet: ${isConnectedLegacy(connectivityManager, allowMobileNetwork)}\n" +
-                    "\n" +
-                    "=== Active Network ===\n" +
-                    "${connectivityManager.activeNetworkInfo}"
-        } else {
-            val activeNetwork = connectivityManager.activeNetwork ?: return "No Active Network"
-            val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-                    ?: return "No Network Capabilities"
+        val activeNetwork = connectivityManager.activeNetwork ?: return "No Active Network"
+        val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+            ?: return "No Network Capabilities"
 
-            var info: String = "App can use Internet: ${isConnected(context, allowMobileNetwork)}\n" +
-                    "Is Internet Available: ${activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)}\n" +
-                    "\n" +
-                    "=== Active Network ===\n" +
-                    "$activeNetworkCapabilities" +
-                    "\n\n" +
-                    "=== All Networks ===\n"
+        var info: String = "App can use Internet: ${isConnected(context, allowMobileNetwork)}\n" +
+                "Is Internet Available: ${activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)}\n" +
+                "\n" +
+                "=== Active Network ===\n" +
+                "$activeNetworkCapabilities" +
+                "\n\n" +
+                "=== All Networks ===\n"
 
-            connectivityManager.allNetworks.forEach { network ->
-                connectivityManager.getNetworkCapabilities(network)?.let {
-                    info += "$it\n\n"
-                }
+        connectivityManager.allNetworks.forEach { network ->
+            connectivityManager.getNetworkCapabilities(network)?.let {
+                info += "$it\n\n"
             }
-
-            return info
         }
+
+        return info
     }
 
     fun getActiveNetworkInfo(context: Context): String {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (Build.VERSION.SDK_INT < 23) {
-            return connectivityManager.activeNetworkInfo?.toString() ?: "No Active Network"
-        } else {
-            val activeNetwork = connectivityManager.activeNetwork ?: return "No Active Network"
-            val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-                    ?: return "No Network Capabilities"
-            return activeNetworkCapabilities.toString()
-        }
+        val activeNetwork = connectivityManager.activeNetwork ?: return "No Active Network"
+        val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+            ?: return "No Network Capabilities"
+        return activeNetworkCapabilities.toString()
     }
 
     /**
@@ -139,7 +111,7 @@ object NetworkUtil {
             connectivityManager.registerDefaultNetworkCallback(networkCallback)
         } else
             connectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), networkCallback)
-        }
+    }
 
     /**
      * Unregisters [ConnectivityManager.NetworkCallback] registered in [registerNetworkCallback]
