@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
     signing
     kotlin("android")
-    id("de.undercouch.download") version "5.5.0"
+    id("de.undercouch.download") version "5.6.0"
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.detekt)
 }
@@ -64,6 +64,7 @@ dependencies {
 //    implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.process)
+    compileOnly(libs.androidx.room.common)
     compileOnly(libs.androidx.datastorePrefs)
 
     // Firebase
@@ -83,7 +84,6 @@ dependencies {
     implementation(libs.ktor.client.core)
 
     implementation(libs.okhttp)
-    compileOnly(libs.retrofit)
 
     // Logging
     implementation(libs.kermit)
