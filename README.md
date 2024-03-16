@@ -1,6 +1,8 @@
 Android Commons Library
 =======================
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.dbtools/android-commons/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.dbtools/android-commons)
+
 Shared Android Library
 
 **Features**
@@ -26,7 +28,7 @@ Helpers for
 License
 =======
 
-    Copyright 2012-2023 Jeff Campbell
+    Copyright 2012-2024 Jeff Campbell
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
