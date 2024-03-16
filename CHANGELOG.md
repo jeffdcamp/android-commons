@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added KotlinDateTimeTextConverter to support kotlin-datetime converters for Room
+- Added CacheApiResponse for supporting etags and ApiResponse
+- Added HttpRequestBuilder.cacheHeaders
+
+### Changed
+
+- Min SDK to 23
+- Updated ApiResponse to support error response json (type E)
+- Updated executeSafely to better support updated ApiResponse AND CacheApiResponse
+- Improved dependencies (Changed all plugins to alias)
+
+### Removed
+
+- Removed KotlinSerializationFactory for Retrofit
+- Removed < 23 code from NetworkUtil
+
 ## [1.5.0] - 2024-02-17
 
 ### Added
