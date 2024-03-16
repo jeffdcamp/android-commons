@@ -1,14 +1,13 @@
-
 import com.android.build.gradle.tasks.GenerateBuildConfig
 
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.download)
+    alias(libs.plugins.detekt)
     `maven-publish`
     signing
-    kotlin("android")
-    id("de.undercouch.download") version "5.6.0"
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.detekt)
 }
 
 android {
