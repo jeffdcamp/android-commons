@@ -80,7 +80,8 @@ dependencies {
     implementation(libs.okio)
 
     // Network
-    implementation(libs.ktor.client.core)
+    compileOnly(libs.ktor.client.core)
+    compileOnly(libs.ktor.client.logging)
 
     implementation(libs.okhttp)
 
@@ -93,6 +94,13 @@ dependencies {
     testImplementation(libs.mockK)
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.assertk)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.ktor.client.core)
+    testImplementation(libs.ktor.client.content.negotiation)
+    testImplementation(libs.ktor.client.logging)
+    testImplementation(libs.ktor.client.serialization)
+    testImplementation(libs.ktor.client.resources)
 }
 
 // ===== TEST TASKS =====

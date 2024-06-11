@@ -1,13 +1,13 @@
 [versions]
 agp = "8.4.1"
 kotlin = "2.0.0"
-kotlinxCoroutines = "1.8.1"
-kotlinxSerializationJson = "1.7.0-RC"
+kotlinxCoroutines = "1.9.0-RC"
+kotlinxSerializationJson = "1.7.0"
 kotlinxDateTime = "0.6.0"
 
 androidxActivity = "1.9.0"
 androidxDataStore = "1.1.1"
-androidxLifecycle = "2.8.0"
+androidxLifecycle = "2.8.1"
 androidxRoom = "2.6.1"
 
 assertk = "0.28.1"
@@ -16,15 +16,15 @@ desugarJdkLibs = "2.0.4"
 detekt = "1.23.6"
 downloadPlugin = "5.6.0"
 
-firebaseAnalytics = "22.0.0"
+firebaseAnalytics = "22.0.1"
 firebaseAuth = "23.0.0"
 firebaseConfig = "22.0.0"
-firebaseCrashlytics = "19.0.0"
+firebaseCrashlytics = "19.0.1"
 firebaseFirestore = "25.0.0"
 
 junit = "5.10.2"
 kermit = "2.0.3"
-ktor = "3.0.0-beta-1"
+ktor = "2.3.11"
 mockK = "1.13.11"
 okhttp = "4.12.0"
 okio = "3.9.0"
@@ -68,6 +68,11 @@ kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.r
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-resources = { module = "io.ktor:ktor-client-resources", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
