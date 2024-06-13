@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2024-06-10
+
+### Added
+
+- Added KtorKermitLogger
+- Added tests for ApiResponse, CacheApiResponse
+
+### Changed
+
+- Gradle 8.8
+- Improvements to ApiResponse, CacheApiResponse, KtorExt
+- Updated all other versions
+
 ## [1.7.0] - 2024-05-25
 
 ### Changed
