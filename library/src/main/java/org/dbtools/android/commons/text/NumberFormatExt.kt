@@ -2,7 +2,8 @@
 package org.dbtools.android.commons.text
 
 fun Double.toPercentageText(): String {
-    return "${String.format("%.0f", this * 100)}%"
+    val rounded = (this * 100).toRoundedText(0)
+    return "${rounded}%"
 }
 
 fun Double.toRoundedText(decimalPlaces: Int = 1, trimTrailingZero: Boolean = true): String {
