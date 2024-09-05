@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.download)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.dependencyAnalysis)
     `maven-publish`
     signing
 }
@@ -59,7 +60,7 @@ tasks.withType<GenerateBuildConfig> {
 dependencies {
     // Android
     coreLibraryDesugaring(libs.android.desugar)
-    implementation(libs.androidx.activity)
+//    implementation(libs.androidx.activity)
 //    implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.process)

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.1] - 2024-09-05
+
+### Added
+
+- Added InstantEpochSerializer
+- Added Instant.dayOfWeek(...), Instant.nextDayOfWeek(...), Instant.previousOrSameDayOfWeek(...) 
+
+### Changed
+
+- Updated Double.toPercentageText() to better support KMP
+- Android SDK 35
+- Gradle 8.10
+- Kotlin 2.0.20
+- Updated all other versions
+
 ## [1.8.0] - 2024-06-10
 
 ### Added
