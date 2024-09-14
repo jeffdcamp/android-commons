@@ -1,7 +1,7 @@
 [versions]
 agp = "8.6.0"
 kotlin = "2.0.20"
-kotlinxCoroutines = "1.9.0-RC.2"
+kotlinxCoroutines = "1.9.0"
 kotlinxSerializationJson = "1.7.2"
 kotlinxDateTime = "0.6.1"
 
@@ -11,15 +11,15 @@ androidxLifecycle = "2.8.5"
 androidxRoom = "2.6.1"
 
 assertk = "0.28.1"
-dependencyAnalysis = "2.0.1"
+dependencyAnalysis = "2.0.2"
 desugarJdkLibs = "2.1.2"
-detekt = "1.23.6"
+detekt = "1.23.7"
 downloadPlugin = "5.6.0"
 
 firebaseAnalytics = "22.1.0"
 firebaseAuth = "23.0.0"
 firebaseConfig = "22.0.0"
-firebaseCrashlytics = "19.0.3"
+firebaseCrashlytics = "19.1.0"
 firebaseFirestore = "25.1.0"
 
 junit = "5.11.0"
@@ -27,7 +27,7 @@ kermit = "2.0.4"
 ktor = "2.3.12"
 mockK = "1.13.12"
 okhttp = "4.12.0"
-okio = "3.9.0"
+okio = "3.9.1"
 versionsPlugin = "0.51.0"
 
 [plugins]
