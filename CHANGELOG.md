@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2024-09-21
+
+### Added
+
+- Added Support for Real-time RemoteConfig
+- Added RefreshFlow
+
+### Changed
+
+- Updated all versions
+
+
 ## [1.8.1] - 2024-09-05
 
 ### Added
