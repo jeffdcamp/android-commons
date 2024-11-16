@@ -3,25 +3,29 @@
 package org.dbtools.android.commons.download
 
 import co.touchlab.kermit.Logger
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.headers
+import io.ktor.client.request.prepareGet
+import io.ktor.http.contentLength
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.readRemaining
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.ResponseBody
-import okio.Buffer
-import okio.BufferedSink
-import okio.BufferedSource
-import okio.ForwardingSource
-import okio.Source
+import kotlinx.io.Source
+import kotlinx.io.readByteArray
 import okio.buffer
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.time.TimeSource.Monotonic.markNow
 
-@Suppress("unused")
+/**
+ * DirectDownloader
+ *
+ * Provides ability to download a file directly to a target path using a DownloadRequest
+ */
 class DirectDownloader {
     val inProgress = AtomicBoolean(false) // replace with https://github.com/Kotlin/kotlinx-atomicfu
     private var cancelRequested = false
@@ -29,61 +33,107 @@ class DirectDownloader {
     private val _progressStateFlow = MutableStateFlow<DirectDownloadProgress>(DirectDownloadProgress.Enqueued)
     val progressStateFlow: StateFlow<DirectDownloadProgress> = _progressStateFlow
 
-    private fun reset() {
-        cancelRequested = false
-    }
-
-    suspend fun download(directDownloadRequest: DirectDownloadRequest, dispatcher: CoroutineDispatcher = Dispatchers.IO): DirectDownloadResult = withContext(dispatcher) {
-        val filesystem = directDownloadRequest.fileSystem
+    /**
+     * Download File
+     * @param httpClient Ktor HttpClient
+     * @param directDownloadRequest Request info for downloader
+     * @param dispatcher Coroutine Dispatcher to be used for the download
+     *
+     * @return DirectDownloadResult containing success flag and possible messages
+     */
+    suspend fun download(
+        httpClient: HttpClient,
+        directDownloadRequest: DirectDownloadRequest,
+        dispatcher: CoroutineDispatcher = Dispatchers.IO
+    ): DirectDownloadResult = withContext(dispatcher) {
         if (!inProgress.compareAndSet(false, true)) {
             return@withContext DirectDownloadResult(false, "Download already in progress")
         }
 
-        try {
-            reset()
-
-            val httpClient = OkHttpClient.Builder()
-            .addNetworkInterceptor(Interceptor { chain: Interceptor.Chain ->
-                val originalResponse = chain.proceed(chain.request())
-
-                originalResponse.newBuilder()
-                    .body(ProgressResponseBody(checkNotNull(originalResponse.body)))
-                    .build()
-
-            })
-            .build()
-
-            // make sure target file doesn't already exist
-            val prepareTargetFileResult = prepareTargetFile(directDownloadRequest)
-            if (prepareTargetFileResult != null) {
-                _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(false, prepareTargetFileResult.message)
-                return@withContext prepareTargetFileResult
-            }
-
-            // execute download
-            val directDownloadResult = executeDownload(httpClient, directDownloadRequest)
-
-            // verify result
-            if (directDownloadResult.success && !filesystem.exists(directDownloadRequest.targetFile)) {
-                val message = "Download was successful, but the target file does not exist (${directDownloadRequest.targetFile})"
-                _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(false, message)
-                return@withContext DirectDownloadResult(false, message)
-            }
-
-            return@withContext directDownloadResult
-        } catch (expected: Exception) {
-            Logger.e(expected) { "Failed to download: directDownloadRequest" }
-
-            // notify observers
-            _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(false, expected.message)
-
-            DirectDownloadResult(false, expected.message)
-        } finally {
-            inProgress.set(false)
+        val directDownloadResult: DirectDownloadResult = downloadFile(
+            httpClient = httpClient,
+            directDownloadRequest = directDownloadRequest
+        ) { totalBytesRead, contentLength ->
+            _progressStateFlow.value = DirectDownloadProgress.Downloading(totalBytesRead, contentLength)
         }
+
+        _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(directDownloadResult.success, directDownloadResult.message)
+
+        return@withContext directDownloadResult
     }
 
-    /*
+    private suspend fun downloadFile(
+        httpClient: HttpClient,
+        directDownloadRequest: DirectDownloadRequest,
+        updateProgress: (totalBytesRead: Long, contentLength: Long) -> Unit,
+    ): DirectDownloadResult {
+        val mark = markNow()
+
+        // make sure target file doesn't already exist
+        val prepareTargetFileResult = prepareTargetFile(directDownloadRequest)
+        if (prepareTargetFileResult != null) {
+            return prepareTargetFileResult
+        }
+
+        val directDownloadResult: DirectDownloadResult = try {
+            val httpStatement = httpClient.prepareGet(directDownloadRequest.downloadUrl) {
+                // add any custom headers
+                headers {
+                    directDownloadRequest.customHeaders?.forEach { directDownloadHeader ->
+                        append(directDownloadHeader.name, directDownloadHeader.value)
+                    }
+                }
+            }
+
+            // execute and download
+            httpStatement.execute { httpResponse ->
+                // Parse Content-Length header value.
+                val contentLength = httpResponse.contentLength() ?: 0L
+
+                directDownloadRequest.fileSystem.sink(directDownloadRequest.targetFile).buffer().use { outputFileBufferSink ->
+                    @Suppress("UNUSED_VARIABLE") // used to provide sum to "updateProgress(...)
+                    var totalBytesRead = 0L
+                    val channel: ByteReadChannel = httpResponse.body()
+                    while (!channel.isClosedForRead) {
+                        if (cancelRequested) {
+                            return@execute DirectDownloadResult(false, "Download canceled")
+                        }
+
+                        val source: Source = channel.readRemaining(DEFAULT_BUFFER_SIZE.toLong())
+                        while (!source.exhausted()) {
+                            val bytes = source.readByteArray()
+
+                            outputFileBufferSink.write(bytes)
+
+                            // update totalBytesRead
+                            totalBytesRead += bytes.size
+
+                            // update progress
+                            if (directDownloadRequest.trackProgress && totalBytesRead % directDownloadRequest.trackProgressUpdateIntervalSize == 0L) {
+                                updateProgress(totalBytesRead, contentLength)
+                            }
+                        }
+                    }
+                }
+                Logger.i { "A file saved to ${directDownloadRequest.targetFile}" }
+                DirectDownloadResult(success = true)
+            }
+        } catch (expected: Exception) {
+            DirectDownloadResult(success = false, expected.message)
+        }
+
+        // verify result
+        if (directDownloadResult.success && !directDownloadRequest.fileSystem.exists(directDownloadRequest.targetFile)) {
+            val message = "Download was successful, but the target file does not exist (${directDownloadRequest.targetFile})"
+            return DirectDownloadResult(false, message)
+        }
+
+        Logger.i { "Download complete for: ${directDownloadRequest.targetFile} (${mark.elapsedNow()})" }
+
+        return directDownloadResult
+    }
+
+    /**
      * Make sure target directory exists, and target file does NOT yet exist
      */
     @Suppress("ReturnCount") // all return points are valid and needed
@@ -126,123 +176,11 @@ class DirectDownloader {
         return null
     }
 
-    private fun executeDownload(httpClient: OkHttpClient, directDownloadRequest: DirectDownloadRequest): DirectDownloadResult {
-        val fileSystem = directDownloadRequest.fileSystem
-        val targetFile = directDownloadRequest.targetFile
-
-        // create request
-        val requestBuilder = Request.Builder()
-            .url(directDownloadRequest.downloadUrl)
-
-        // add any custom headers
-        directDownloadRequest.customHeaders?.forEach { header ->
-            requestBuilder.addHeader(header.name, header.value)
-        }
-
-        // build the request
-        val okhttpRequest = requestBuilder.build()
-
-        // download NOW
-        val startMs = System.currentTimeMillis()
-
-        Logger.d { "Direct Downloading [${directDownloadRequest.downloadUrl}] -> [${directDownloadRequest.targetFile}]" }
-        val directDownloadResult: DirectDownloadResult = httpClient.newCall(okhttpRequest).execute().use { response ->
-            if (!response.isSuccessful) {
-                return@use DirectDownloadResult(false, "Failed to download code: ${response.code}", response.code)
-            }
-
-            val body = response.body ?: return@use DirectDownloadResult(false, "Download Request body == null", response.code)
-
-            // write body to file
-            fileSystem.write(targetFile) {
-                writeBodyToBufferedSink(directDownloadRequest, body, this) ?: DirectDownloadResult(true, code = response.code)
-            }
-        }
-
-        val totalDownloadMs = System.currentTimeMillis() - startMs
-        Logger.d { "Direct Download Finished ${totalDownloadMs}ms [${directDownloadResult.code}] [${directDownloadRequest.downloadUrl}] -> [${directDownloadRequest.targetFile}]" }
-
-        // notify observers
-        _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(directDownloadResult.success, directDownloadResult.message)
-
-        return directDownloadResult
-    }
-
-    private fun writeBodyToBufferedSink(directDownloadRequest: DirectDownloadRequest, body: ResponseBody, buffer: BufferedSink): DirectDownloadResult? {
-        try {
-            buffer.writeAll(body.source())
-        } catch (expected: IllegalStateException) {
-            return when {
-                expected.message == "closed" && cancelRequested -> {
-                    val message = "Direct Download Cancelled for ${directDownloadRequest.targetFile}"
-                    Logger.w { message }
-                    // do nothing (expected)
-                    DirectDownloadResult(false, message)
-                }
-                else -> {
-                    val message = "Failed to download file [${directDownloadRequest.targetFile.name}]"
-                    Logger.e(expected) { message }
-                    DirectDownloadResult(false, message)
-                }
-            }
-        } catch (expected: Exception) {
-            val message = "Failed to download file [${directDownloadRequest.targetFile.name}]"
-            Logger.e(expected) { message }
-            return DirectDownloadResult(false, message)
-        }
-
-        return null // Success (no errors)
-    }
-
     fun cancel() {
         cancelRequested = true
     }
 
-    private inner class ProgressResponseBody(
-        private val responseBody: ResponseBody
-    ) : ResponseBody() {
-        private val bufferedSource: BufferedSource by lazy { source(responseBody.source()).buffer() }
-
-        override fun contentType(): MediaType? = responseBody.contentType()
-
-        override fun contentLength(): Long = responseBody.contentLength()
-
-        override fun source(): BufferedSource = bufferedSource
-
-        private fun source(source: Source): Source {
-            return object : ForwardingSource(source) {
-                var totalBytesRead = 0L
-                override fun read(sink: Buffer, byteCount: Long): Long {
-                    val bytesRead = super.read(sink, byteCount)
-                    val downloadComplete = bytesRead == -1L // read() returns the number of bytes read, or -1 if this source is exhausted.
-
-                    // update totalBytesRead
-                    totalBytesRead += if (!downloadComplete) bytesRead else 0
-
-                    // report progress
-//                    reportProgress(downloadComplete)
-                    val progress = DirectDownloadProgress.Downloading(totalBytesRead, responseBody.contentLength())
-                    _progressStateFlow.value = progress
-
-                    return bytesRead
-                }
-
-                private fun reportProgress(downloadComplete: Boolean) {
-                    when {
-                        downloadComplete -> {
-                            _progressStateFlow.value = DirectDownloadProgress.DownloadComplete(true)
-                        }
-                        else -> {
-                            val progress = DirectDownloadProgress.Downloading(totalBytesRead, responseBody.contentLength())
-                            _progressStateFlow.value = progress
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     companion object {
-        const val MAX_PROGRESS = 100
+        const val DEFAULT_PROGRESS_UPDATE_BYTE_SIZE = 1000L
     }
 }

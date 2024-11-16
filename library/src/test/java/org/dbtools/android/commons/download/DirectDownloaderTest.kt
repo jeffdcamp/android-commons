@@ -2,6 +2,8 @@ package org.dbtools.android.commons.download
 
 import assertk.assertThat
 import assertk.assertions.isTrue
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
 import kotlinx.coroutines.test.runTest
 import okio.FileSystem
 import okio.Path.Companion.toPath
@@ -26,8 +28,10 @@ class DirectDownloaderTest {
         // create request
         val downloadRequest = DirectDownloadRequest(downloadUrl, fileSystem, downloadFile)
 
+        val httpClient = HttpClient(OkHttp.create())
+
         // download
-        directDownloader.download(downloadRequest)
+        directDownloader.download(httpClient, downloadRequest)
 
         assertThat(fileSystem.exists(downloadFile)).isTrue()
     }
