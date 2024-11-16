@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2024-11-16
+
+### Changed
+
+- Fix issue with CacheApiResponse
+- Changed DirectDownloader to use ktor
+- Updated all versions
+
 ## [1.10.0] - 2024-09-21
 
 ### Added

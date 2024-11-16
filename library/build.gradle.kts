@@ -36,6 +36,7 @@ android {
                 "-Xopt-in=kotlinx.coroutines.FlowPreview",
                 "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi",
                 "-Xopt-in=coil.annotation.ExperimentalCoilApi",
+                "-Xopt-in=kotlin.uuid.Uuid",
         )
     }
 
@@ -99,6 +100,7 @@ dependencies {
     testImplementation(libs.ktor.client.mock)
     testImplementation(libs.ktor.client.core)
     testImplementation(libs.ktor.client.content.negotiation)
+    testImplementation(libs.ktor.client.okhttp)
     testImplementation(libs.ktor.client.logging)
     testImplementation(libs.ktor.client.serialization)
     testImplementation(libs.ktor.client.resources)
@@ -117,7 +119,7 @@ tasks.withType<Test> {
 tasks.register<de.undercouch.gradle.tasks.download.Download>("downloadDetektConfig") {
     download {
         onlyIf { !file("build/config/detektConfig.yml").exists() }
-        src("https://raw.githubusercontent.com/ICSEng/AndroidPublic/main/detekt/detektConfig-20231101.yml")
+        src("https://raw.githubusercontent.com/jeffdcamp/kmp-commons/master/detekt/detektConfig-latest.yml")
         dest("build/config/detektConfig.yml")
     }
 }
