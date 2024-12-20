@@ -87,6 +87,10 @@ class DirectDownloader {
 
             // execute and download
             httpStatement.execute { httpResponse ->
+                if (!httpResponse.status.isSuccess()) {
+                    return@execute DirectDownloadResult(false, "Failed to download file: ${httpResponse.status}", httpResponse.status.value)
+                }
+
                 // Parse Content-Length header value.
                 val contentLength = httpResponse.contentLength() ?: 0L
 
