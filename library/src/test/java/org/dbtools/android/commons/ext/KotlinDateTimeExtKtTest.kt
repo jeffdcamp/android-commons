@@ -2,7 +2,7 @@ package org.dbtools.android.commons.ext
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.junit.jupiter.api.Test
 
 class KotlinDateTimeExtKtTest {

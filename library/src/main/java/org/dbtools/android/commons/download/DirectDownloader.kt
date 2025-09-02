@@ -8,6 +8,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.headers
 import io.ktor.client.request.prepareGet
 import io.ktor.http.contentLength
+import io.ktor.http.isSuccess
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.readRemaining
 import kotlinx.coroutines.CoroutineDispatcher

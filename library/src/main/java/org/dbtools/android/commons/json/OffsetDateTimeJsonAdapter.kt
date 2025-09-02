@@ -97,15 +97,15 @@ object LocalTimeSerializer : KSerializer<LocalTime> {
     }
 }
 
-@Serializer(forClass = kotlinx.datetime.Instant::class)
-object InstantEpochSerializer: KSerializer<kotlinx.datetime.Instant> {
+@Serializer(forClass = kotlin.time.Instant::class)
+object InstantEpochSerializer: KSerializer<kotlin.time.Instant> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("InstantEpochSerializer", PrimitiveKind.LONG)
 
-    override fun serialize(encoder: Encoder, value: kotlinx.datetime.Instant) {
+    override fun serialize(encoder: Encoder, value: kotlin.time.Instant) {
         encoder.encodeLong(value.toEpochMilliseconds())
     }
 
-    override fun deserialize(decoder: Decoder): kotlinx.datetime.Instant {
-        return kotlinx.datetime.Instant.fromEpochMilliseconds(decoder.decodeLong())
+    override fun deserialize(decoder: Decoder): kotlin.time.Instant {
+        return kotlin.time.Instant.fromEpochMilliseconds(decoder.decodeLong())
     }
 }

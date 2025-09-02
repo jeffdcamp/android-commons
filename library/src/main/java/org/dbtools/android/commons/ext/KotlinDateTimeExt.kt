@@ -1,7 +1,7 @@
 package org.dbtools.android.commons.ext
 
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.toLocalDateTime

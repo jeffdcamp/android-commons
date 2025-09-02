@@ -2,11 +2,13 @@
 
 package org.dbtools.android.commons.network
 
+import android.Manifest.permission.ACCESS_NETWORK_STATE
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
+import androidx.annotation.RequiresPermission
 
 object NetworkUtil {
     @Suppress("ReturnCount")
@@ -54,7 +56,10 @@ object NetworkUtil {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         return connectivityManager.allNetworks.any { network ->
-            connectivityManager.getNetworkCapabilities(network)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+            connectivityManager.getNetworkCapabilities(network)?.let {
+                it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            } == true
         }
     }
 
@@ -63,8 +68,18 @@ object NetworkUtil {
 
         return connectivityManager.allNetworks.any { network ->
             val capabilities = connectivityManager.getNetworkCapabilities(network)
-            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }
+    }
+
+    @RequiresPermission(ACCESS_NETWORK_STATE)
+    fun activeNetworkHasCaptivePortal(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetworkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork) ?: return false
+        return activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_CAPTIVE_PORTAL)
     }
 
     fun getAllNetworkInfo(context: Context, allowMobileNetwork: Boolean = true): String {
@@ -76,6 +91,8 @@ object NetworkUtil {
 
         var info: String = "App can use Internet: ${isConnected(context, allowMobileNetwork)}\n" +
                 "Is Internet Available: ${activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)}\n" +
+                "Is Internet Validated: ${activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)}\n" +
+                "Is Captive Portal: ${activeNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_CAPTIVE_PORTAL)}\n" +
                 "\n" +
                 "=== Active Network ===\n" +
                 "$activeNetworkCapabilities" +
